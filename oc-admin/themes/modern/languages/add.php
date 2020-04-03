@@ -32,9 +32,6 @@
     <div id="upload-language">
         <div class="form-horizontal">
         <?php if( is_writable( osc_translations_path() ) ) { ?>
-            <div class="flashmessage flashmessage-info flashmessage-inline" style="display:block;">
-                <p class="info"><?php printf( __('Download more languages at %s'), '<a href="'.osc_admin_base_url(true) . '?page=market&action=languages">Market</a>'); ?></p>
-            </div>
             <form class="separate-top" action="<?php echo osc_admin_base_url(true); ?>" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="add_post" />
                 <input type="hidden" name="page" value="languages" />
@@ -60,7 +57,7 @@
             <p class="text">
                 <?php _e('To make the directory writable under UNIX execute this command from the shell:'); ?>
             </p>
-            <pre>chmod a+w <?php echo osc_translations_path(); ?></pre>
+            <pre>chmod 0755 <?php echo osc_translations_path(); ?></pre>
         <?php } ?>
         </div>
     </div>

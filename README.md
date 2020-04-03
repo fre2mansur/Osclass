@@ -1,37 +1,46 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/navjottomer/osclass/badge)](https://www.codefactor.io/repository/github/navjottomer/osclass)
+
 # Osclass
 
-### All you need to easily create your own classifieds website
+**This repo is a fork of official [Osclass][original-code] repository.**
+## Why this new fork?
+Since Osclass project was effectively shut down in September 2019, this project's goal is to continue its development, to adapt new features, get rid of deprecated code and set road for new goals.
 
-[Osclass is for classifieds][osclass] what WordPress is for publishing. It's a free
-and open script to create your advertisement or listings site. Best features: Plugins,
+## What is Osclass?
+Osclass is a free and open script to create your advertisement or listings site. Best features: Plugins,
 themes, multi-language, CAPTCHA, dashboard, SEO friendly.
 
-![Preview of Osclass][preview]
+## Support
+For any support related query, please visit our official support forum.
 
-## Project info
-
-* [Official website][osclass]
-* [Code repository][code]
-* [Mailing list][mailing]
-* IRC Channel [#osclass][irc]
-* License: [Apache License V2.0][license]
+* [Osclass Discourse][support-forum]
 
 ## Develop
 
 Clone the repository and the submodules.
 
 ```
-$> git clone --recursive https://github.com/navjottomer/Osclass.git
+$> git clone --recursive git@github.com:navjottomer/Osclass.git
 ```
+## Pull Request
+Want to help create a pull request from you clone, just make sure of few things
+
+* Never target master-branch
+* Target develop branch if you wan't to merge your fixes.
+* Request a feature branch if your pull request change the functionality of our project.
+* Create a new issue before making any pull request.  
+
+## Project info
+
+* Documentation: [Documentation][documentation]
+* License: [Apache License V2.0][license]
+
 
 ## Installation
+* Visit our documentation : https://osclass.gitbook.io/osclass-docs/beginners/install
 
-Go to [our site][installing] to get detailed information on installing Osclass.
-
-[osclass]: http://osclass.org/
-[preview]: http://osclass.org/wp-content/uploads/2011/01/single_job_board-1024x729.png
+[documentation]: https://osclass.gitbook.io/osclass-docs/
+[support-forum]: https://osclass.discourse.group
+[original-code]: https://github.com/osclass/Osclass
 [code]: https://github.com/navjottomer/Osclass
-[mailing]: http://list.osclass.org/listinfo/osc-develop
-[irc]: http://webchat.freenode.net/?channels=osclass
 [license]: http://www.apache.org/licenses/LICENSE-2.0
-[installing]: http://osclass.org/installing-osclass/

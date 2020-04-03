@@ -23,7 +23,9 @@
     * @author Osclass
     */
 
-    if(!defined('BCRYPT_COST')) { define('BCRYPT_COST', 15); }
+	use OpensslCryptor\Cryptor;
+
+	if(!defined( 'BCRYPT_COST')) { define( 'BCRYPT_COST', 15); }
 
     /**
      * Creates a random password.
@@ -231,57 +233,37 @@
         return false;
     }
 
-    /*
-     * Verify an user's password
-     *
-     * @param $password plain-text
-     * @hash bcrypt/sha1
-     * @since 3.3
-     * @return boolean
-     */
+
 	/**
-	 * @param $password
+	 * Verify an user's password
+	 *
+	 * @param $password plain-text
 	 * @param $hash
 	 *
 	 * @return bool
+	 * @throws \Exception
+	 * @hash  bcrypt/sha1
+	 * @since 3.3
 	 */
 	function osc_verify_password( $password , $hash ) {
-        if(version_compare(PHP_VERSION, '5.3.7')>=0) {
-            return password_verify($password, $hash)?true:(sha1($password)==$hash);
-        }
 
-        require_once LIB_PATH . 'Bcrypt.php';
-        if(CRYPT_BLOWFISH==1) {
-            $bcrypt = new Bcrypt(BCRYPT_COST);
-            return $bcrypt->verify($password, $hash)?true:(sha1($password)==$hash);
-        }
-        return (sha1($password)==$hash);
+            return password_verify($password, $hash)?true:(sha1($password)==$hash);
     }
 
-    /*
-     * Hash a password in available method (bcrypt/sha1)
-     *
-     * @param $password plain-text
-     * @since 3.3
-     * @return string hashed password
-     */
+
 	/**
-	 * @param $password
+	 * Hash a password in available method (bcrypt/sha1)
 	 *
-	 * @return bool|false|string
+	 * @param $password plain-text
+	 *
+	 * @return string hashed password
+	 * @throws \Exception
+	 * @since 3.3
 	 */
 	function osc_hash_password( $password ) {
-        if(version_compare(PHP_VERSION, '5.3.7')>=0) {
+
             $options = array('cost' => BCRYPT_COST);
             return password_hash($password, PASSWORD_BCRYPT, $options);
-        }
-
-        require_once LIB_PATH . 'Bcrypt.php';
-        if(CRYPT_BLOWFISH==1) {
-            $bcrypt = new Bcrypt(BCRYPT_COST);
-            return $bcrypt->hash($password);
-        }
-        return sha1($password);
     }
 
 
@@ -296,35 +278,16 @@
         osc_set_alert_public_key();  // public key
         $key = hash( 'sha256' , osc_get_alert_private_key(), true);
 
-        if(Cryptor::Usable()) {
+		if(function_exists('openssl_digest') && function_exists('openssl_encrypt') && function_exists('openssl_decrypt') && in_array('aes-256-ctr', openssl_get_cipher_methods(true)) && in_array('sha256', openssl_get_md_methods(true))) {
             return Cryptor::Encrypt($string, $key, 0);
         }
-
-        // START DEPRECATED : To be removed in future versions
-        if(function_exists('mcrypt_module_open')) {
-            $cipher = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_CBC, '');
-            $cipherText = '';
-            if (mcrypt_generic_init($cipher, $key, $key) != -1) {
-                $cipherText = mcrypt_generic($cipher, $string);
-                mcrypt_generic_deinit($cipher);
-            }
-            return $cipherText;
-        }
-        // END DEPRECATED : To be removed in future versions
 
         // COMPATIBILITY
         while (strlen($string) % 32 != 0) {
             $string .= "\0";
         }
 
-        require_once LIB_PATH . 'phpseclib/autoload.php';
-        require_once LIB_PATH . 'phpseclib/bootstrap.php';
-        $loader = new \Composer\Autoload\ClassLoader();
-        $loader->addPsr4('phpseclib\\', LIB_PATH . 'phpseclib');
-        $loader->register();
-
-
-        $cipher = new phpseclib\Crypt\Rijndael(phpseclib\Crypt\Common\SymmetricKey::MODE_CBC);
+        $cipher = new phpseclib\Crypt\Rijndael();
         $cipher->disablePadding();
         $cipher->setBlockLength(256);
         $cipher->setKey($key);
@@ -333,39 +296,22 @@
     }
 
 
-	/**
-	 * @param $string
-	 *
-	 * @return string
-	 */
+    /**
+    * @param $string
+    *
+    * @return string
+    * @throws \Exception
+    */
 	function osc_decrypt_alert( $string ) {
         $key = hash( 'sha256' , osc_get_alert_private_key(), true);
 
-        if(Cryptor::Usable()) {
+		if(function_exists('openssl_digest') && function_exists('openssl_encrypt') && function_exists('openssl_decrypt') && in_array('aes-256-ctr', openssl_get_cipher_methods(true)) && in_array('sha256', openssl_get_md_methods(true))) {
             return trim(substr(Cryptor::Decrypt($string, $key, 0), 32));
         }
 
-        // START DEPRECATED : To be removed in future versions
-        if(function_exists('mcrypt_module_open')) {
-            $cipher = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_CBC, '');
-            $cipherText = '';
-            if (mcrypt_generic_init($cipher, $key, $key) != -1) {
-                $cipherText = mdecrypt_generic($cipher, $string);
-                mcrypt_generic_deinit($cipher);
-            }
-            return trim(substr($cipherText, 32));
-        }
-        // END DEPRECATED : To be removed in future versions
-
         // COMPATIBILITY
-        require_once LIB_PATH . 'phpseclib/autoload.php';
-        require_once LIB_PATH . 'phpseclib/bootstrap.php';
-        $loader = new \Composer\Autoload\ClassLoader();
-        $loader->addPsr4('phpseclib\\', LIB_PATH . 'phpseclib');
-        $loader->register();
 
-
-        $cipher = new phpseclib\Crypt\Rijndael(phpseclib\Crypt\Common\SymmetricKey::MODE_CBC);
+        $cipher = new phpseclib\Crypt\Rijndael();
         $cipher->disablePadding();
         $cipher->setBlockLength(256);
         $cipher->setKey($key);
@@ -430,15 +376,6 @@
                 $buffer_valid = true;
             }
         }
-
-        // START DEPRECATED: To be removed in future releases
-        if (!$buffer_valid && function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
-            $buffer = mcrypt_create_iv($length);
-            if ($buffer) {
-                $buffer_valid = true;
-            }
-        }
-        // END DEPRECATED: To be removed in future releases
 
         if (!$buffer_valid || strlen($buffer) < $length) {
             $bl = strlen($buffer);

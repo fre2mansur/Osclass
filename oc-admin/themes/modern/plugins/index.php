@@ -103,7 +103,6 @@
         ?>
         <li><a href="#update-plugins"><?php _e('Updates'); ?></a></li>
         <?php } ?>
-        <li><a href="#market" onclick="window.location = '<?php echo osc_admin_base_url(true) . '?page=market&action=plugins'; ?>'; return false; "><?php _e('Market'); ?></a></li>
         <li><a href="#upload-plugins"><?php _e('Available plugins'); ?></a></li>
     </ul>
     <div id="upload-plugins">
@@ -152,7 +151,7 @@
             <form method="get" action="<?php echo osc_admin_base_url(true); ?>"  class="inline nocsrf">
                 <?php foreach( Params::getParamsAsArray('get') as $key => $value ) { ?>
                     <?php if( $key != 'iDisplayLength' ) { ?>
-                        <input type="hidden" name="<?php echo $key; ?>" value="<?php echo osc_esc_html($value); ?>" />
+                        <input type="hidden" name="<?php echo osc_esc_html($key); ?>" value="<?php echo osc_esc_html($value); ?>" />
                     <?php } } ?>
                 <select name="iDisplayLength" class="select-box-extra select-box-medium float-left" onchange="this.form.submit();" >
                     <option value="10" <?php if( Params::getParam('iDisplayLength') == 10 ) echo 'selected'; ?> ><?php printf(__('%d plugins'), 10); ?></option>

@@ -435,7 +435,7 @@
                         <?php } else if($o==1) { ?>
                             options += '<option value="1" >' + (osc.langs.expiration_day!=null?osc.langs.expiration_day:'<?php echo osc_esc_js(__('1 day')); ?>')+ '</option>';
                         <?php } else { ?>
-                            if(max_exp==0 || <?php echo $o; ?><=max_exp) {
+                            if(max_exp==0 || max_exp>=<?php echo $o; ?>) {
                                 options += '<option value="<?php echo $o; ?>" >' + (osc.langs.expiration_days!=null?osc.langs.expiration_days:'<?php echo osc_esc_js(__('%d days')); ?>').replace("%d", <?php echo $o; ?>) + '</option>';
                             }
                     <?php }
@@ -913,6 +913,7 @@
                     minlength: 3,
                     maxlength: 100
                 }
+                <?php osc_run_hook('item_form_new_validation_rules'); ?>
             },
             messages: {
                 catId: "<?php echo osc_esc_js(__('Choose one category')); ?>.",
@@ -941,6 +942,7 @@
                     minlength: "<?php echo osc_esc_js(__( 'Address: enter at least 3 characters' )); ?>.",
                     maxlength: "<?php echo osc_esc_js(__( 'Address: no more than 100 characters' )); ?>."
                 }
+                <?php osc_run_hook('item_form_new_validation_messages'); ?>
             },
             errorLabelContainer: "#error_list",
             wrapper: "li",
@@ -1205,6 +1207,7 @@
                     minlength: 3,
                     maxlength: 100
                 }
+                <?php osc_run_hook('item_form_validation_rules'); ?>
             },
             messages: {
                 catId: "<?php echo osc_esc_js(__('Choose one category')); ?>.",
@@ -1239,6 +1242,7 @@
                     minlength: "<?php echo osc_esc_js(__( 'Address: enter at least 3 characters' )); ?>.",
                     maxlength: "<?php echo osc_esc_js(__( 'Address: no more than 100 characters' )); ?>."
                 }
+                <?php osc_run_hook('item_form_validation_messages'); ?>
             },
             errorLabelContainer: "#error_list",
             wrapper: "li",
@@ -1664,7 +1668,7 @@
                             if(parseInt(new_id)==0) {
                                 $(li).append('<div class="primary_image primary"></div>');
                             } else {
-                                $(li).append('<div class="primary_image"><a title="<?php echo osc_esc_js(osc_esc_html(__('Make primary image'))); ?>"></a></div>');
+                                $(li).append('<div class="primary_image"><a title="<?php echo osc_esc_js(osc_esc_html(__('Make primary image'))); ?>"><?php echo osc_esc_js(osc_esc_html(__('Make primary image'))); ?></a></div>');
                             }
                             <?php }
                             // @TOFIX @FIXME escape $responseJSON_uploadName below

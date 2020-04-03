@@ -191,8 +191,9 @@ FB;
                             $field['s_value']   = $temp;
                         }
                     } else {
-                        $temp['from']   = Params::getParam('meta['.$field['pk_i_id'].'][from]');
-                        $temp['to']     = Params::getParam('meta['.$field['pk_i_id'].'][to]');
+                        $_meta = Params::getParam('meta');
+                        $temp['from']   = @(int)$_meta[$field['pk_i_id']]['from'];
+                        $temp['to']     = @(int)$_meta[$field['pk_i_id']]['to'];
                         $field['s_value'] = $temp;
                     }
                 }
@@ -228,7 +229,7 @@ FB;
                         if(count($options)>0) {
                             echo '<select name="meta['.$field['pk_i_id'].']" id="meta_' . $field['s_slug'] . '">';
                             if($search) {
-                                echo '<option value=""></option>';
+                                echo '<option value="">'. __('Select', 'osclass')." ". $field['s_name'].'</option>';
                             }
                             foreach($options as $option) {
                                 echo '<option value="'.osc_esc_html($option).'" '.($field['s_value']==$option?'selected="selected"':'').'>'.$option.'</option>';
