@@ -136,6 +136,9 @@
                             $do = new CWebCustom();
                             $do->doModel();
         break;
+        case ('rest'):      //Rest API
+                            require_once(osc_lib_path() . 'osclass/controller/rest.php');
+        break;
         default:            // home and static pages that are mandatory...
                             require_once(osc_lib_path() . 'osclass/controller/main.php');
                             $do = new CWebMain();
